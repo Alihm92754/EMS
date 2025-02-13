@@ -19,20 +19,25 @@ const Navbar = ({children}) => {
         <div className="flex justify-between h-16">
           {/* Logo on the left */}
           <div className="flex-shrink-0 flex items-center">
-            <img
-              className="h-8 w-auto"
-              src={logo}
-            />
+            <Link href="/">
+               <img
+                 className="h-8 w-auto cursor-pointer"
+                 src={logo}
+               />
+            </Link>
           </div>
 
           {/* Employee button with dropdown in the middle */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center ">
+            <div className="relative">
+              <Link href="/" className="flex flex-row items-center gap-1 text-gray-400 hover:text-white px-3 py-2 rounded-md text-md font-medium focus:outline-none">Home</Link>
+            </div>
             <div className="relative">
               <button
                 onClick={toggleDropdown}
                 className="flex flex-row items-center gap-1 text-gray-400 hover:text-white px-3 py-2 rounded-md text-md font-medium focus:outline-none"
               >
-                Employee
+                Employees
                 <MdKeyboardArrowDown />
               </button>
               {isDropdownOpen && (
@@ -44,11 +49,11 @@ const Navbar = ({children}) => {
                     aria-labelledby="options-menu"
                   >
                     <Link
-                      href="#"
+                      href={route("employees.create")}
                       className="block px-4 py-2 text-sm text-white hover:bg-blue-700"
                       role="menuitem"
                     >
-                      Add Employee
+                      Add New Employee
                     </Link>
                   </div>
                 </div>

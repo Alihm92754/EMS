@@ -9,23 +9,23 @@ use Inertia\Response;
 
 class EmployeeController extends Controller
 {
-    public function index(): Response 
+    public function index() 
     {
-        $employees = Employee::paginate(10);
+        $employees = Employee::latest()->paginate(10);
         return inertia('Employees/Index', ['employees' => $employees]);
     }
 
-    public function create(): Response 
+    public function create()
     {
         return inertia('Employees/Create');
     }
 
     public function store(Request $request) 
     {
-        $request->validate([
+        $fields = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:employees',
-            'phone' => 'required',
+            'phone' => 'required|digits:8',
             'dob' => 'required|date',
             'job_title' => 'required',
             'department' => 'required',
@@ -34,18 +34,23 @@ class EmployeeController extends Controller
             'end_date' => 'nullable|date'
         ]);
 
-        Employee::create($request->all());
-        return redirect()->route('employee.index')->with('success', 'Employee created successfully.');
+        Employee::create($fields);
+        return redirect('/');
     }
 
-    public function edit(Employee $employee): Response
+    public function show(Employee $employee)
     {
-        return Inertia::render('Employees/Edit', ['employee' => $employee]);
+        return inertia('Employees/Show', ['employee' => $employee]);
+    }
+
+    public function edit(Employee $employee)
+    {
+        return inertia('Employees/Edit', ['employee' => $employee]);
     }
 
     public function update(Request $request, Employee $employee)
     {
-        $request->validate([
+        $fields = $request->validate([
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
@@ -57,13 +62,13 @@ class EmployeeController extends Controller
             'end_date' => 'nullable|date'
         ]);
 
-        $employee->update($request->all());
-        return redirect()->route('employees.index');
+        $employee->update($fields);
+        return redirect()->route('employees.show', ['employee' => $employee])->with('message', 'Employee Information updated successfully!');
     }
 
-    public function destory(Employee $employee)
+    public function destroy(Employee $employee)
     {
         $employee->delete();
-        return redirect()->route('employees.index');
+        return redirect('/')->with('message', 'Employee was deleted successfully!');
     }
 }

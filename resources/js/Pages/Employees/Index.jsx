@@ -1,30 +1,48 @@
 import Navbar from "@/Layouts/Navbar";
-import { Head, Link, usePage } from "@inertiajs/react"
+import { Head, Link, usePage } from "@inertiajs/react";
+import { IoArrowRedoSharp } from "react-icons/io5";
+import { useRoute } from "../../../../vendor/tightenco/ziggy";
+import { useState } from "react";
 
 
 const Index = () => {
 
+    const route = useRoute();
     const { employees } = usePage().props;
+    const { flash } = usePage().props;
+
+    const [flashMsg, setFlashMsg] = useState(flash.message);
+
+    setTimeout(() => {
+        setFlashMsg(null);
+    }, 3000);
 
   return (
     <div className="p-6">
-        <Head title="Employees" />
+        <Head title="Home" />
+        { flashMsg && (
+            <div className="absolute top-24 right-6 bg-rose-500 p-2 rounded-md shadow-lg text-sm text-white">
+                {flashMsg}
+            </div> 
+        )}
         <h1 className="text-2xl font-bold mb-4">Employees List</h1>
-        <Link href={route("employees.create")} className="bg-green-500 text-white px-4 py-2">
-        Add Employee
-        </Link>
-        <table className="w-full border-collapse border border-gray-300 mt-3">
+        <table className="w-full border-collapse rounded-lg overflow-hidden shadow-lg mt-6">
             <thead>
-                <tr className="bg-gray-200">
-                    <th className="border border-gray-300 px-4 py-2">Name</th>
-                    <th className="border border-gray-300 px-4 py-2">Email</th>
-                    <th className="border border-gray-300 px-4 py-2">Job Title</th>
+                <tr className="bg-gradient-to-r from-blue-950 to-purple-600">
+                    <th className="text-white border border-gray-300 px-6 py-3">Name</th>
+                    <th className="text-white border border-gray-300 px-6 py-3">Email</th>
+                    <th className="text-white border border-gray-300 px-6 py-3">Job Title</th>
                 </tr>
             </thead>
             <tbody>
                 {employees.data.map((employee) => (
                     <tr key={employee.id}>
-                        <td className="border border-gray-300 px-4 py-2">{employee.name}</td>
+                        <td className="flex justify-between border border-gray-300 px-4 py-2">
+                            {employee.name}
+                            <Link href={route('employees.show', employee)}>
+                                <IoArrowRedoSharp className="cursor-pointer" />
+                            </Link>
+                        </td>
                         <td className="border border-gray-300 px-4 py-2">{employee.email}</td>
                         <td className="border border-gray-300 px-4 py-2">{employee.job_title}</td>
                     </tr>

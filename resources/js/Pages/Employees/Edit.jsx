@@ -1,30 +1,33 @@
 import Navbar from "@/Layouts/Navbar";
-import { Head, useForm } from "@inertiajs/react"
+import { Head, useForm } from "@inertiajs/react";
+import { useRoute } from "../../../../vendor/tightenco/ziggy";
 
 
-const Create = () => {
+const Edit = ({ employee }) => {
 
-    const { data, setData, post, errors, processing } = useForm({
-        name: "",
-        email: "",
-        phone: "",
-        dob: "",
-        job_title: "",
-        department: "",
-        salary: "",
-        start_date: "",
+    const route = useRoute();
+
+    const { data, setData, put, errors, processing } = useForm({
+        name: employee.name,
+        email: employee.email,
+        phone: employee.phone,
+        dob: employee.dob,
+        job_title: employee.job_title,
+        department: employee.department,
+        salary: employee.salary,
+        start_date: employee.start_date,
         end_date: "",
     });
 
     const handleSubmit = (e) => {
-        e.preventDefault()
-        post("/employees");
+        e.preventDefault();
+        put(route('employees.update', employee));
     };
 
   return (
         <div className="p-6 mt-10 max-w-2xl mx-auto bg-white rounded-lg shadow-lg">
-        <Head title="Add New Employee" />
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Add New Employee</h1>
+        <Head title="Edit Employee" />
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Edit An Employee</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
             
             <div>
@@ -126,6 +129,18 @@ const Create = () => {
                 />
                 {errors.start_date && <p className="text-red-500 text-sm mt-1">{errors.start_date}</p>}
             </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">End Date:</label>
+                <input
+                    type="date"
+                    value={data.end_date}
+                    onChange={(e) => setData("start_date", e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 outline-none"
+                    placeholder="Enter your start date"
+                />
+                {errors.end_date && <p className="text-red-500 text-sm mt-1">{errors.end_date}</p>}
+            </div>
     
             {/* Submit Button */}
             <div className="text-center">
@@ -143,7 +158,7 @@ const Create = () => {
                             Saving...
                         </span>
                     ) : (
-                        "Submit"
+                        "Update"
                     )}
                 </button>
             </div>
@@ -152,6 +167,6 @@ const Create = () => {
   );
 }
 
-Create.layout = page => <Navbar children={page} />
+Edit.layout = page => <Navbar children={page} />
 
-export default Create;
+export default Edit;
