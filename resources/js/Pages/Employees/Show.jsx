@@ -96,7 +96,7 @@ const Show = ({ employee }) => {
               <div className="flex flex-row space-x-8">
                   <Link href={route('employees.edit', employee)}>             
                       <button
-                          className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-300"
+                          className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition duration-300"
                           >
                           <svg
                             className="w-7 h-7"
